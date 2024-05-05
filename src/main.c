@@ -3,25 +3,21 @@
 #include "display.h"
 #include "dht11.h"
 #include "wifi.h"
+#include "weather.h"
 
 int main()
 {
     // wifi_init();
     // wifi_command_join_AP("cubeco", "arina123");
     // wifi_command_create_TCP_connection("172.20.10.3", 24, NULL, NULL);
-    dht11_init();
+    weather_init();
     display_init();
+    double tempHumidLight[] = {0,0,0}
 
     while (1)
     {
-        uint8_t temperature_integer, temperature_decimal;
-        char str[64];
-       
-
-        if (dht11_get(NULL, NULL, &temperature_integer, &temperature_decimal) == DHT11_OK)
-        {
-            display_int(temperature_integer);
-            _delay_ms(2000);
-        }
+        //send tempHumidLight to backend
+        //weather.updateWeather(tempHumidLight) updates the three three minute averages
+        //this should probably not be in a while(true) loop, but that will be when we figure out connection
     }
 }
