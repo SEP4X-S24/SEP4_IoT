@@ -1,6 +1,7 @@
 #include "weather.h"
 #include "temperature.h"
-#define NUM_READINGS 180 // Number of readings for 3 minutes (assuming 1 reading every second)
+#include "light.h"
+#define NUM_READINGS 180.0 // Number of readings for 3 minutes (assuming 1 reading every second)
 
 void weather_init()
 {
@@ -18,7 +19,7 @@ void updateWeather(float TempHumidLight[])
     for (int i = 0; i < NUM_READINGS; i++) {
         temperatureSum += temperature_get_combined_value();
         humiditySum += humidity_get_float();
-        lightSum += light_get_float();
+        lightSum += light_read();
 
         _delay_ms(1000)
     }
