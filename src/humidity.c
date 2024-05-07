@@ -3,9 +3,7 @@
 #include "stdio.h"
 #include "stdlib.h"
 
-void humidity_init() {
-    dht11_init();
-}
+
 
 uint8_t humidity_get_integer() {
     uint8_t humidity_integer;

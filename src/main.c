@@ -19,11 +19,11 @@ int main()
 
     while (1)
     {        
-    display_int((int16_t)(tempHumidLight[0]*1000));
+    display_int((int16_t)(tempHumidLight[0]));
     _delay_ms(tenSeconds);
-    display_int((int16_t)(tempHumidLight[1]*1000));
+    display_int((int16_t)(tempHumidLight[1]));
     _delay_ms(tenSeconds);
-    display_int((int16_t)(tempHumidLight[2]*1000));
+    display_int((int16_t)(tempHumidLight[2]));
     _delay_ms(tenSeconds);
     display_int(9999);
     _delay_ms(tenSeconds);
