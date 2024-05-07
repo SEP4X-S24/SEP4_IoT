@@ -1,5 +1,7 @@
 #include "temperature.h"
 #include "dht11.h"
+#include "stdio.h"
+#include "stdlib.h"
 
 #define NUM_READINGS 180 // Number of readings for 3 minutes (assuming 1 reading every second)
 static uint8_t temperature_readings[NUM_READINGS];
@@ -33,8 +35,9 @@ uint8_t temperature_get_decimal() {
 
 float temperature_get_combined_value()
 {
-    int integer = temperature_get_integer;
-    int decimal = temperature_get_decimal;
+    uint8_t integer = temperature_get_integer;
+    uint8_t decimal = temperature_get_decimal;
+
 
     float combine = integer + (decimal / 100.0);
 

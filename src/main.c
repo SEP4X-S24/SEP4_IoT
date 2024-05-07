@@ -12,10 +12,11 @@ int main()
     // wifi_command_create_TCP_connection("172.20.10.3", 24, NULL, NULL);
     weather_init();
     display_init();
-    double tempHumidLight[] = {0,0,0}
+    float tempHumidLight[] = {0,0,0};
 
     while (1)
     {
+        updateWeather(tempHumidLight);
         //send tempHumidLight to backend
         //weather.updateWeather(tempHumidLight) updates the three three minute averages
         //this should probably not be in a while(true) loop, but that will be when we figure out connection
