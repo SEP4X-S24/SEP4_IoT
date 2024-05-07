@@ -1,5 +1,7 @@
 #include "humidity.h"
 #include "dht11.h"
+#include "stdio.h"
+#include "stdlib.h"
 
 void humidity_init() {
     dht11_init();

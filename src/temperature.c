@@ -1,5 +1,7 @@
 #include "temperature.h"
 #include "dht11.h"
+#include "stdio.h"
+#include "stdlib.h"
 
 #define NUM_READINGS 180 // Number of readings for 3 minutes (assuming 1 reading every second)
 static uint8_t temperature_readings[NUM_READINGS];
