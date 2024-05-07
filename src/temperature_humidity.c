@@ -2,6 +2,9 @@
 #include "dht11.h"
 #include "stdio.h"
 #include "stdlib.h"
+#include "display.h"
+#include <util/delay.h>
+
 
 TempHumid temperature_humidity_get_combined_values()
 {
@@ -21,5 +24,9 @@ TempHumid temperature_humidity_get_combined_values()
 
         return newData;
     }
-    
+    else
+    {
+        display_int(7777);
+        _delay_ms(1000);
+    }
 }
