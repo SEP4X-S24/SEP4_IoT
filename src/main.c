@@ -4,6 +4,7 @@
 #include "dht11.h"
 #include "wifi.h"
 #include "weather.h"
+#include "light.h"
 
 int main()
 {

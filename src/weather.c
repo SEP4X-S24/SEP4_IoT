@@ -5,7 +5,7 @@
 #include "util/delay.h"
 #include "dht11.h"
 
-#define NUM_READINGS 180.0 
+#define NUM_READINGS 36
 
 void weather_init(){
     
@@ -19,7 +19,7 @@ void updateWeather(float TempHumidLight[]){
     float humiditySum = 0;
     uint16_t lightSum = 0;
     TempHumid tempandhumid;
-    double second = 1000;
+    double second = 5000;
     for (int i = 0; i < NUM_READINGS; i++) {
         tempandhumid = temperature_humidity_get_combined_values();
         temperatureSum += tempandhumid.temp;
