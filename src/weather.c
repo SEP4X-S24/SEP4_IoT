@@ -1,29 +1,33 @@
 #include "weather.h"
-#include "temperature.h"
-#include "humidity.h"
+#include "temperature_humidity.h"
 #include "light.h"
 #include "display.h"
 #include "util/delay.h"
+#include "dht11.h"
 
-#define NUM_READINGS 180.0 
+#define NUM_READINGS 36
 
 void weather_init(){
-    temperature_init();
+    
+    dht11_init();
     light_init();
-    humidity_init();
     display_init();
 }
 
 void updateWeather(float TempHumidLight[]){
     float temperatureSum = 0;
     float humiditySum = 0;
-    float lightSum = 0;
-    double second = 1000;
+    uint16_t lightSum = 0;
+    TempHumid tempandhumid;
+    double second = 5000;
     for (int i = 0; i < NUM_READINGS; i++) {
-        temperatureSum += temperature_get_combined_value();
-        humiditySum += humidity_get_combined_value();
+        tempandhumid = temperature_humidity_get_combined_values();
+        temperatureSum += tempandhumid.temp;
+        humiditySum += tempandhumid.humid;
+        _delay_ms(50);
         lightSum += light_read();
-
+        _delay_ms(50);
+        display_int(i);
         _delay_ms(second);
     }
 
@@ -35,6 +39,8 @@ void updateWeather(float TempHumidLight[]){
     TempHumidLight[1] = humidAvg;
     TempHumidLight[2] = lightAvg;
 
+
+    
     display_int((int)temperatureAvg);
     _delay_ms(second);
     display_int((int)humidAvg);
