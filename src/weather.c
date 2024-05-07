@@ -1,6 +1,5 @@
 #include "weather.h"
 #include "temperature_humidity.h"
-#include "humidity.h"
 #include "light.h"
 #include "display.h"
 #include "util/delay.h"
