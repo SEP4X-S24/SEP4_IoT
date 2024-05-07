@@ -12,18 +12,18 @@ int main()
     // wifi_command_create_TCP_connection("172.20.10.3", 24, NULL, NULL);
     weather_init();
     display_init();
-    display_int(0000);
+    display_setValues(0,0,0,0);
     float tempHumidLight[] = {0,0,0};
     float tenSeconds = 10000;
     updateWeather(tempHumidLight);
 
     while (1)
     {        
-    display_int((int)tempHumidLight[0]);
+    display_int((int16_t)(tempHumidLight[0]*1000));
     _delay_ms(tenSeconds);
-    display_int((int)tempHumidLight[1]);
+    display_int((int16_t)(tempHumidLight[1]*1000));
     _delay_ms(tenSeconds);
-    display_int((int)tempHumidLight[2]);
+    display_int((int16_t)(tempHumidLight[2]*1000));
     _delay_ms(tenSeconds);
     display_int(9999);
     _delay_ms(tenSeconds);
