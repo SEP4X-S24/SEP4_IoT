@@ -23,7 +23,7 @@ void updateWeather(float TempHumidLight[]){
         temperatureSum += temperature_get_combined_value();
         humiditySum += humidity_get_combined_value();
         lightSum += light_read();
-
+        display_int(i);
         _delay_ms(second);
     }
 
@@ -35,6 +35,8 @@ void updateWeather(float TempHumidLight[]){
     TempHumidLight[1] = humidAvg;
     TempHumidLight[2] = lightAvg;
 
+
+    
     display_int((int)temperatureAvg);
     _delay_ms(second);
     display_int((int)humidAvg);

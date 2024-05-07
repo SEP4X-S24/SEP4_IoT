@@ -31,8 +31,8 @@ uint8_t humidity_get_decimal() {
 
 float humidity_get_combined_value()
 {
-    int integer = humidity_get_integer;
-    int decimal = humidity_get_decimal;
+    uint8_t integer = humidity_get_integer();
+    uint8_t decimal = humidity_get_decimal();
 
     float combine = integer + (decimal / 100.0);
 
