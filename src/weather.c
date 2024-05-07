@@ -17,14 +17,16 @@ void weather_init(){
 void updateWeather(float TempHumidLight[]){
     float temperatureSum = 0;
     float humiditySum = 0;
-    float lightSum = 0;
+    uint16_t lightSum = 0;
     TempHumid tempandhumid;
     double second = 1000;
     for (int i = 0; i < NUM_READINGS; i++) {
         tempandhumid = temperature_humidity_get_combined_values();
         temperatureSum += tempandhumid.temp;
         humiditySum += tempandhumid.humid;
+        _delay_ms(50);
         lightSum += light_read();
+        _delay_ms(50);
         display_int(i);
         _delay_ms(second);
     }
