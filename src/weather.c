@@ -4,6 +4,7 @@
 #include "display.h"
 #include "util/delay.h"
 #include "dht11.h"
+#include <avr/interrupt.h>
 
 #define NUM_READINGS 36
 
@@ -21,11 +22,15 @@ void updateWeather(float TempHumidLight[]){
     TempHumid tempandhumid;
     double second = 5000;
     for (int i = 0; i < NUM_READINGS; i++) {
+        cli();
         tempandhumid = temperature_humidity_get_combined_values();
+        sei();
         temperatureSum += tempandhumid.temp;
         humiditySum += tempandhumid.humid;
         _delay_ms(50);
+        cli();
         lightSum += light_read();
+        sei();
         _delay_ms(50);
         display_int(i);
         _delay_ms(second);
