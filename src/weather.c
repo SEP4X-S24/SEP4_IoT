@@ -15,11 +15,12 @@ void weather_init(){
     display_init();
 }
 
-void updateWeather(float TempHumidLight[]){
-    float temperatureSum = 0;
-    float humiditySum = 0;
+TempHumidLight updateWeather(){
+    uint16_t temperatureSum = 0;
+    uint16_t humiditySum = 0;
     uint16_t lightSum = 0;
     TempHumid tempandhumid;
+    TempHumidLight temphumidlight;
     double second = 5000;
     for (int i = 0; i < NUM_READINGS; i++) {
         cli();
@@ -36,13 +37,13 @@ void updateWeather(float TempHumidLight[]){
         _delay_ms(second);
     }
 
-    float temperatureAvg = temperatureSum / NUM_READINGS;
-    float lightAvg = lightSum / NUM_READINGS;
-    float humidAvg = humiditySum / NUM_READINGS;
+    uint16_t temperatureAvg = temperatureSum / NUM_READINGS;
+    uint16_t lightAvg = lightSum / NUM_READINGS;
+    uint16_t humidAvg = humiditySum / NUM_READINGS;
 
-    TempHumidLight[0] = temperatureAvg;
-    TempHumidLight[1] = humidAvg;
-    TempHumidLight[2] = lightAvg;
+    temphumidlight.temp = temperatureAvg;
+    temphumidlight.humid = humidAvg;
+    temphumidlight.light = lightAvg;
 
 
     
@@ -52,4 +53,6 @@ void updateWeather(float TempHumidLight[]){
     _delay_ms(second);
     display_int((int)lightAvg);
     _delay_ms(second);
+
+    return temphumidlight;
 }

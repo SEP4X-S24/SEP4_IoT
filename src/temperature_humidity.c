@@ -15,12 +15,12 @@ TempHumid temperature_humidity_get_combined_values()
 
     if (dht11_get(&humidity_integer, &humidity_decimal, &temperature_integer, &temperature_decimal) == DHT11_OK) {
        
-        float combine_temp = temperature_integer + (temperature_decimal / 100.0);
-        float combine_humid = humidity_integer + (humidity_decimal/100);
+        double combine_temp = temperature_integer + (temperature_decimal / 100.0);
+        double combine_humid = humidity_integer + (humidity_decimal/100);
 
         TempHumid newData;
-        newData.temp = combine_temp;
-        newData.humid = combine_humid;
+        newData.temp = temperature_integer;
+        newData.humid = humidity_integer;
 
         return newData;
     }

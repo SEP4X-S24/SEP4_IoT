@@ -3,8 +3,8 @@
 #include <stdint.h>
 
 typedef struct{
-    float temp;
-    float humid;
+    uint8_t temp;
+    uint8_t humid;
 
 } TempHumid;
 
