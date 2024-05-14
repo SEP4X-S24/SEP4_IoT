@@ -11,7 +11,7 @@
 int main()
 {
     wifi_init();
-    wifi_command_join_AP("Norlys83766", "bas81ymer29");
+    wifi_command_join_AP("Pixel de Hugo", "Lumia535");
     wifi_command_create_TCP_connection("192.168.87.126",88, NULL, NULL);
     cJSON *root = cJSON_CreateObject();
     weather_init();
