@@ -15,40 +15,57 @@
 #define address "20.13.143.114"
 #define port 2228
 
-
-int main()
+void init_all_sensors()
 {
     wifi_init();
-    wifi_command_join_AP(SSID, psswd);
-    wifi_command_create_TCP_connection(address, port, NULL, NULL);
-
-
-    cJSON *root = cJSON_CreateObject();
     weather_init();
     display_init();
-    display_setValues(0, 0, 0, 0);
+}
+
+void wifi_connect()
+{
+    wifi_command_join_AP(SSID, psswd);
+    wifi_command_create_TCP_connection(address, port, NULL, NULL);
+}
+
+void send_data()
+{
+    cJSON *json = cJSON_CreateObject();
+
     TempHumidLight collectedValues = updateWeather();
-    cJSON_AddNumberToObject(root, "temperature", collectedValues.temp);
-    cJSON_AddNumberToObject(root, "humidity", collectedValues.humid);
-    cJSON_AddNumberToObject(root, "light", collectedValues.light);
-    char *jsonString = cJSON_Print(root);
+
+    //adding the values to the json
+    cJSON_AddNumberToObject(json, "temperature", collectedValues.temp);
+    cJSON_AddNumberToObject(json, "humidity", collectedValues.humid);
+    cJSON_AddNumberToObject(json, "light", collectedValues.light);
+    char *jsonString = cJSON_Print(json);
     size_t length = strlen(jsonString);
     wifi_command_TCP_transmit((unsigned char *)jsonString, length);
-    display_int(9999);
+    cJSON_free(json);
+}
 
 
+int main()
+{  
+    //initialices all the required arduino's sensors
+    init_all_sensors();
 
-    _delay_ms(10000);
+    //connects to backend
+    wifi_connect();
+
+    //init json object
+
+    display_setValues(0, 0, 0, 0);
 
     while (1)
     {
-        display_int(collectedValues.temp);
-        _delay_ms(1000);
-        display_int(collectedValues.humid);
-        _delay_ms(1000);
-        display_int(collectedValues.light);
-        _delay_ms(1000);
-        display_int(9999);
-        _delay_ms(1000);
+        char* response;  
+        //listen for incoming connection
+        if (strcmp(response, "update_weather") == 0 )
+        {
+            send_data();
+        }
+        //handle other actions?
+
     }
 }
