@@ -14,9 +14,6 @@ TempHumid temperature_humidity_get_combined_values()
     uint8_t humidity_decimal;
 
     if (dht11_get(&humidity_integer, &humidity_decimal, &temperature_integer, &temperature_decimal) == DHT11_OK) {
-       
-        double combine_temp = temperature_integer + (temperature_decimal / 100.0);
-        double combine_humid = humidity_integer + (humidity_decimal/100);
 
         TempHumid newData;
         newData.temp = temperature_integer;
@@ -29,4 +26,6 @@ TempHumid temperature_humidity_get_combined_values()
         display_int(7777);
         _delay_ms(1000);
     }
+    TempHumid fail;
+    return fail;
 }
