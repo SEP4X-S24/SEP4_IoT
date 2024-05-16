@@ -9,14 +9,19 @@
 #include <cJSON.h>
 #include <string.h>
 
+//Define the connection parameters
+#define SSID "Como_33?"
+#define psswd "Aquilina1"
+#define address "20.13.143.114"
+#define port 2228
 
 
 int main()
 {
     wifi_init();
-    wifi_command_join_AP("Como_33?", "Aquilina1");
-    wifi_command_create_TCP_connection("https://weatherstation4dev.azurewebsites.net", 443, NULL, NULL);
-    wifi_command_TCP_transmit("")
+    wifi_command_join_AP(SSID, psswd);
+    wifi_command_create_TCP_connection(address, port, NULL, NULL);
+
 
     cJSON *root = cJSON_CreateObject();
     weather_init();
@@ -28,8 +33,11 @@ int main()
     cJSON_AddNumberToObject(root, "light", collectedValues.light);
     char *jsonString = cJSON_Print(root);
     size_t length = strlen(jsonString);
+    wifi_command_start_TCP_server(port, client_connected_callback, received_data_buffer);
     wifi_command_TCP_transmit((unsigned char *)jsonString, length);
     display_int(9999);
+
+
 
     _delay_ms(10000);
 
