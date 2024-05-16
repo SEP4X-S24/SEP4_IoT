@@ -33,7 +33,6 @@ int main()
     cJSON_AddNumberToObject(root, "light", collectedValues.light);
     char *jsonString = cJSON_Print(root);
     size_t length = strlen(jsonString);
-    wifi_command_start_TCP_server(port, client_connected_callback, received_data_buffer);
     wifi_command_TCP_transmit((unsigned char *)jsonString, length);
     display_int(9999);
 
