@@ -1,4 +1,5 @@
 #include <util/delay.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include "display.h"
 #include "dht11.h"
@@ -8,11 +9,15 @@
 #include <cJSON.h>
 #include <string.h>
 
+
+
 int main()
 {
     wifi_init();
-    wifi_command_join_AP("Norlys83766", "bas81ymer29");
-    wifi_command_create_TCP_connection("192.168.87.126",88, NULL, NULL);
+    wifi_command_join_AP("Como_33?", "Aquilina1");
+    wifi_command_create_TCP_connection("https://weatherstation4dev.azurewebsites.net", 443, NULL, NULL);
+    wifi_command_TCP_transmit("")
+
     cJSON *root = cJSON_CreateObject();
     weather_init();
     display_init();
@@ -23,8 +28,10 @@ int main()
     cJSON_AddNumberToObject(root, "light", collectedValues.light);
     char *jsonString = cJSON_Print(root);
     size_t length = strlen(jsonString);
-    wifi_command_TCP_transmit((unsigned char*)jsonString, length);
+    wifi_command_TCP_transmit((unsigned char *)jsonString, length);
     display_int(9999);
+
+    _delay_ms(10000);
 
     while (1)
     {
@@ -37,5 +44,4 @@ int main()
         display_int(9999);
         _delay_ms(1000);
     }
-    
 }
