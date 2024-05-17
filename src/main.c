@@ -10,14 +10,14 @@
 #include <string.h>
 
 // Define the connection parameters
-#define SSID "Como_33?"
-#define psswd "Aquilina1"
-#define address "20.13.143.114"
-#define port 2228
+#define SSID "Norlys83766"
+#define psswd "bas81ymer29"
+#define address "192.168.87.126"
+#define port 88
 
-char *received_message;
+char received_message[128];
 
-void init_all_sensors()
+void init_all()
 {
     wifi_init();
     weather_init();
@@ -44,21 +44,32 @@ void update_data()
 }
 
 
-void wifi_connect()
+WIFI_ERROR_MESSAGE_t wifi_connect()
 {
     wifi_command_join_AP(SSID, psswd);
-    wifi_command_create_TCP_connection(address, port, update_data, received_message);
+    return wifi_command_create_TCP_connection(address, port, update_data, received_message);
 }
 
 int main()
 {
-    // initialices all the required arduino's sensors
-    init_all_sensors();
+    init_all();
 
     display_setValues(9, 9, 9, 9);
 
     // connects to backend
-    wifi_connect();
+    WIFI_ERROR_MESSAGE_t connection = WIFI_ERROR_NOT_RECEIVING;
+    while (connection != WIFI_OK)
+    {
+       _delay_ms(500);
+       display_int(7777);
+       connection = wifi_connect();
+    }
 
-    display_setValues(0, 0, 0, 0);
+    display_int(8888);
+
+    while (1)
+    {
+        //this allows the arduino to actually listen for the message
+    }
+    
 }
