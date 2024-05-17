@@ -76,7 +76,7 @@ int main()
         ping_timeout = false;
         while (!ping_timeout) 
         {
-            while (timeout_count < 31)
+            while (timeout_count < 31) // this is so the updateWeather interrupt resets 31 minute countdown
             {
                 _delay_ms(60000);
                 timeout_count +=1;
