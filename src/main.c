@@ -74,7 +74,7 @@ int main()
         }
         display_int(8888);
         ping_timeout = false;
-        while (ping_timeout = false) 
+        while (!ping_timeout) 
         {
             while (timeout_count < 31)
             {
