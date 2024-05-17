@@ -6,7 +6,7 @@
 #include "dht11.h"
 #include <avr/interrupt.h>
 
-#define NUM_READINGS 36
+#define NUM_READINGS 3
 
 void weather_init(){
     
@@ -21,7 +21,7 @@ TempHumidLight updateWeather(){
     uint16_t lightSum = 0;
     TempHumid tempandhumid;
     TempHumidLight temphumidlight;
-    double second = 5000;
+    double second = 1000;
     for (int i = 0; i < NUM_READINGS; i++) {
         cli();
         tempandhumid = temperature_humidity_get_combined_values();

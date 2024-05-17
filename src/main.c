@@ -9,46 +9,67 @@
 #include <cJSON.h>
 #include <string.h>
 
-//Define the connection parameters
-#define SSID "Como_33?"
-#define psswd "Aquilina1"
-#define address "20.13.143.114"
-#define port 2228
+// Define the connection parameters
+#define SSID "Norlys83766"
+#define psswd "bas81ymer29"
+#define address "192.168.87.126"
+#define port 88
 
+char received_message[128];
+
+void init_all()
+{
+    wifi_init();
+    weather_init();
+    display_init();
+}
+
+void update_data()
+{
+    if (strcmp(received_message, "updateWeather") == 0)
+    {
+        cJSON *json = cJSON_CreateObject();
+
+        TempHumidLight collectedValues = updateWeather();
+
+        // adding the values to the json
+        cJSON_AddNumberToObject(json, "temperature", collectedValues.temp);
+        cJSON_AddNumberToObject(json, "humidity", collectedValues.humid);
+        cJSON_AddNumberToObject(json, "light", collectedValues.light);
+        char *jsonString = cJSON_Print(json);
+        size_t length = strlen(jsonString);
+        wifi_command_TCP_transmit((unsigned char *)jsonString, length);
+        cJSON_free(json);
+    }
+}
+
+
+WIFI_ERROR_MESSAGE_t wifi_connect()
+{
+    wifi_command_join_AP(SSID, psswd);
+    return wifi_command_create_TCP_connection(address, port, update_data, received_message);
+}
 
 int main()
 {
-    wifi_init();
-    wifi_command_join_AP(SSID, psswd);
-    wifi_command_create_TCP_connection(address, port, NULL, NULL);
+    init_all();
 
+    display_setValues(9, 9, 9, 9);
 
-    cJSON *root = cJSON_CreateObject();
-    weather_init();
-    display_init();
-    display_setValues(0, 0, 0, 0);
-    TempHumidLight collectedValues = updateWeather();
-    cJSON_AddNumberToObject(root, "temperature", collectedValues.temp);
-    cJSON_AddNumberToObject(root, "humidity", collectedValues.humid);
-    cJSON_AddNumberToObject(root, "light", collectedValues.light);
-    char *jsonString = cJSON_Print(root);
-    size_t length = strlen(jsonString);
-    wifi_command_TCP_transmit((unsigned char *)jsonString, length);
-    display_int(9999);
+    // connects to backend
+    WIFI_ERROR_MESSAGE_t connection = WIFI_ERROR_NOT_RECEIVING;
+    while (connection != WIFI_OK)
+    {
+       _delay_ms(500);
+       display_int(7777);
+       connection = wifi_connect();
+    }
 
-
-
-    _delay_ms(10000);
+    display_int(8888);
 
     while (1)
     {
-        display_int(collectedValues.temp);
-        _delay_ms(1000);
-        display_int(collectedValues.humid);
-        _delay_ms(1000);
-        display_int(collectedValues.light);
-        _delay_ms(1000);
-        display_int(9999);
-        _delay_ms(1000);
+        //this allows the arduino to actually listen for the message
     }
+    
 }
