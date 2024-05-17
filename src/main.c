@@ -7,15 +7,20 @@
 #include "weather.h"
 #include "light.h"
 #include <cJSON.h>
+#include <avr/interrupt.h>
 #include <string.h>
+#include <avr/sleep.h>
+#include <stdbool.h>
 
 // Define the connection parameters
 #define SSID "Norlys83766"
 #define psswd "bas81ymer29"
-#define address "192.168.87.126"
-#define port 88
+#define address "20.13.143.114"
+#define port 2228
 
 char received_message[128];
+bool ping_timeout = false;
+int timeout_count = 0;
 
 void init_all()
 {
@@ -40,9 +45,10 @@ void update_data()
         size_t length = strlen(jsonString);
         wifi_command_TCP_transmit((unsigned char *)jsonString, length);
         cJSON_free(json);
+        ping_timeout = false;
+        timeout_count = 0;
     }
 }
-
 
 WIFI_ERROR_MESSAGE_t wifi_connect()
 {
@@ -53,23 +59,30 @@ WIFI_ERROR_MESSAGE_t wifi_connect()
 int main()
 {
     init_all();
+    sei();
 
     display_setValues(9, 9, 9, 9);
 
-    // connects to backend
-    WIFI_ERROR_MESSAGE_t connection = WIFI_ERROR_NOT_RECEIVING;
-    while (connection != WIFI_OK)
-    {
-       _delay_ms(500);
-       display_int(7777);
-       connection = wifi_connect();
-    }
-
-    display_int(8888);
-
     while (1)
     {
-        //this allows the arduino to actually listen for the message
+        WIFI_ERROR_MESSAGE_t connection = WIFI_ERROR_NOT_RECEIVING;
+        while (connection != WIFI_OK)
+        {
+            _delay_ms(500);
+            display_int(7777);
+            connection = wifi_connect();
+        }
+        display_int(8888);
+        ping_timeout = false;
+        while (!ping_timeout) 
+        {
+            while (timeout_count < 31) // this is so the updateWeather interrupt resets 31 minute countdown
+            {
+                _delay_ms(60000);
+                timeout_count +=1;
+            }
+            ping_timeout = true;
+        }
+        wifi_command_close_TCP_connection();
     }
-    
 }
