@@ -2,9 +2,12 @@
 #include "temperature_humidity.h"
 #include "light.h"
 #include "display.h"
-#include "util/delay.h"
 #include "dht11.h"
+#ifdef WINDOWS_TEST
+#else
+#include <util/delay.h>
 #include <avr/interrupt.h>
+#endif
 
 #define NUM_READINGS 3
 

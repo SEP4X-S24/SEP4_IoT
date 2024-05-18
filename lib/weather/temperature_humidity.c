@@ -3,7 +3,12 @@
 #include "stdio.h"
 #include "stdlib.h"
 #include "display.h"
+#ifdef WINDOWS_TEST
+static inline void _delay_ms(double __ms) {
+}
+#else
 #include <util/delay.h>
+#endif
 
 
 TempHumid temperature_humidity_get_combined_values()
