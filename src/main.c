@@ -47,6 +47,7 @@ void update_data()
         cJSON_free(json);
         ping_timeout = false;
         timeout_count = 0;
+        display_int(5555);
     }
 }
 
@@ -68,22 +69,24 @@ int main()
         WIFI_ERROR_MESSAGE_t connection = WIFI_ERROR_NOT_RECEIVING;
         while (connection != WIFI_OK)
         {
-            _delay_ms(500);
             display_int(7777);
             connection = wifi_connect();
+            _delay_ms(2000);
         }
-        display_int(8888);
+        display_int(4444);
         ping_timeout = false;
         timeout_count = 0;
         while (!ping_timeout) 
         {
-            while (timeout_count < 31) // this is so the updateWeather interrupt resets 31 minute countdown
+            while (timeout_count < 310) // this is so the updateWeather interrupt resets 31 minute countdown
             {
-                _delay_ms(60000);
+                display_int(8888);
+                _delay_ms(6000);
                 timeout_count +=1;
             }
             ping_timeout = true;
         }
+        display_int(6666);
         wifi_command_close_TCP_connection();
     }
 }
