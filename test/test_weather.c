@@ -1,22 +1,12 @@
+#ifdef WEATHER
+
 #include <unity.h>
 #include "weather.h"
 #include "temperature_humidity.h"
 #include "fff.h"
-#include <stdio.h>
+#include "mocks.h"
 
 DEFINE_FFF_GLOBALS
-
-// FFFS
-FAKE_VOID_FUNC(dht11_init);
-FAKE_VALUE_FUNC(uint8_t, dht11_get, uint8_t, uint8_t, uint8_t, uint8_t);
-FAKE_VALUE_FUNC(TempHumid, temperature_humidity_get_combined_values);
-FAKE_VOID_FUNC(cli);
-FAKE_VOID_FUNC(sei);
-FAKE_VOID_FUNC(_delay_ms, double);
-FAKE_VOID_FUNC(light_init);
-FAKE_VALUE_FUNC(uint16_t, light_read);
-FAKE_VOID_FUNC(display_init);
-FAKE_VOID_FUNC(display_int, int16_t);
 
 // SETUP
 void setUp(void){
@@ -67,3 +57,4 @@ int main(void){
 
     return UNITY_END();
 }
+#endif
