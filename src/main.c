@@ -11,6 +11,7 @@
 #include <string.h>
 #include <avr/sleep.h>
 #include <stdbool.h>
+#include <aes.h>
 
 // Define the connection parameters
 #define SSID "Norlys83766"
@@ -18,15 +19,19 @@
 #define address "20.13.143.114"
 #define port 2228
 
-char received_message[128];
 bool ping_timeout = false;
 int timeout_count = 0;
+struct AES_ctx my_AES_ctx;
+bool UnlockingApproved = false;
+char received_message[128];
+uint8_t key[] = "7a68etADEHERT23SGT56";
 
 void init_all()
 {
     wifi_init();
     weather_init();
     display_init();
+    AES_init_ctx(&my_AES_ctx, key);
 }
 
 void update_data()
@@ -43,7 +48,9 @@ void update_data()
         cJSON_AddNumberToObject(json, "light", collectedValues.light);
         char *jsonString = cJSON_Print(json);
         size_t length = strlen(jsonString);
+        AES_ECB_encrypt(&my_AES_ctx, (uint8_t *)jsonString);
         wifi_command_TCP_transmit((unsigned char *)jsonString, length);
+        AES_ECB_decrypt(&my_AES_ctx,(uint8_t*)jsonString);
         cJSON_free(json);
         ping_timeout = false;
         timeout_count = 0;
@@ -74,12 +81,12 @@ int main()
         }
         display_int(8888);
         ping_timeout = false;
-        while (!ping_timeout) 
+        while (!ping_timeout)
         {
             while (timeout_count < 31) // this is so the updateWeather interrupt resets 31 minute countdown
             {
                 _delay_ms(60000);
-                timeout_count +=1;
+                timeout_count += 1;
             }
             ping_timeout = true;
         }
