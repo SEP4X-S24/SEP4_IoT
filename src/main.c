@@ -1,17 +1,4 @@
-#include <util/delay.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include "display.h"
-#include "dht11.h"
-#include "wifi.h"
-#include "weather.h"
-#include "light.h"
-#include <cJSON.h>
-#include <avr/interrupt.h>
-#include <string.h>
-#include <avr/sleep.h>
-#include <stdbool.h>
-#include <aes.h>
+#include "includes.h"
 
 // Define the connection parameters
 #define SSID "Pixel de Hugo"
