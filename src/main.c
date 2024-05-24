@@ -24,7 +24,6 @@
 bool ping_timeout = false;
 int timeout_count = 0;
 struct AES_ctx my_AES_ctx;
-bool UnlockingApproved = false;
 char received_message[128];
 uint8_t key[] = "5468617473206D79204B756E67204675";
 
