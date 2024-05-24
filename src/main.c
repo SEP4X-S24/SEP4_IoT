@@ -13,8 +13,8 @@
 #include <stdbool.h>
 
 // Define the connection parameters
-#define SSID "Norlys83766"
-#define psswd "bas81ymer29"
+#define SSID "Pixel de Hugo"
+#define psswd "Lumia535"
 #define address "20.13.143.114"
 #define port 2228
 
@@ -29,11 +29,9 @@ void init_all()
     display_init();
 }
 
-void update_data()
+void create_and_send_weather()
 {
-    if (strcmp(received_message, "updateWeather") == 0)
-    {
-        cJSON *json = cJSON_CreateObject();
+         cJSON *json = cJSON_CreateObject();
 
         TempHumidLight collectedValues = updateWeather();
 
@@ -48,6 +46,13 @@ void update_data()
         ping_timeout = false;
         timeout_count = 0;
         display_int(5555);
+}
+
+void update_data()
+{
+    if (strcmp(received_message, "updateWeather") == 0)
+    {
+        create_and_send_weather();
     }
 }
 
@@ -73,14 +78,15 @@ int main()
             connection = wifi_connect();
             _delay_ms(2000);
         }
+        create_and_send_weather();
         display_int(4444);
         ping_timeout = false;
         timeout_count = 0;
         while (!ping_timeout) 
         {
-            while (timeout_count < 310) // this is so the updateWeather interrupt resets 31 minute countdown
+            while (timeout_count < 301) // this is so the updateWeather interrupt resets 30 minute countdown
             {
-                display_int(8888);
+                display_int(timeout_count);
                 _delay_ms(6000);
                 timeout_count +=1;
             }
