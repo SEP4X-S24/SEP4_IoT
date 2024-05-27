@@ -4,8 +4,8 @@
 // Define the connection parameters
 #define SSID "Norlys83766"
 #define psswd "bas81ymer29"
-#define address "192.168.87.126"
-#define port 88
+#define address "20.13.143.114"
+#define port 2228
 
 #define BLOCK_SIZE 16
 
@@ -14,7 +14,7 @@ int timeout_count = 0;
 struct AES_ctx my_AES_ctx;
 bool UnlockingApproved = false;
 char received_message[128];
-uint8_t key[] = "E3C39C72AC8D2AE";
+uint8_t key[] = {0x2b, 0x7e, 0x15, 0x16, 0x28, 0xae, 0xd2, 0xa6, 0xab, 0xf7, 0x15, 0x88, 0x09, 0xcf, 0x4f, 0x3c};
 
 void init_all()
 {
@@ -24,13 +24,12 @@ void init_all()
     AES_init_ctx(&my_AES_ctx, key);
 }
 
-// Function to pad the input to a multiple of the block size using PKCS#7 padding
+// implementation of PKCS#7 padding
 void pad_input(uint8_t *input, size_t *length)
 {
     size_t padding_needed = BLOCK_SIZE - (*length % BLOCK_SIZE);
     size_t padded_length = *length + padding_needed;
 
-    // Fill the padding bytes with the value of padding_needed
     for (size_t i = *length; i < padded_length; i++) {
         input[i] = (uint8_t)padding_needed;
     }
@@ -51,7 +50,7 @@ void bin2hex(const uint8_t *bin, size_t len, char *hex) {
     for (size_t i = 0; i < len; i++) {
         sprintf(hex + (i * 2), "%02x", bin[i]);
     }
-    hex[len * 2] = '\0'; // Null-terminate the hex string
+    hex[len * 2] = '\0'; // null-terminate 
 }
 
 void create_and_send_weather()
@@ -74,10 +73,21 @@ void create_and_send_weather()
         
         bin2hex((uint8_t *)jsonString, length, hex);
 
-        wifi_command_TCP_transmit((unsigned char *)hex, length * 2);
+        // Prepend "ENCRYPTED:" to the hex string
+        const char *prefix = "ENCRYPTED:";
+        size_t prefixLength = strlen(prefix);
+        size_t totalLength = prefixLength + strlen(hex);
+        char *finalData = (char *)malloc(totalLength + 1);  // +1 for null-termination
+        strcpy(finalData, prefix);
+        strcat(finalData, hex);
 
+        // Transmit the final data
+        wifi_command_TCP_transmit((unsigned char *)finalData, totalLength);
+
+        // Clean up
         cJSON_Delete(json);
         free(jsonString);
+        free(finalData);
 
         ping_timeout = false;
         timeout_count = 0;
