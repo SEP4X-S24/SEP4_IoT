@@ -1,5 +1,4 @@
 #include "includes.h"
-
 // Define the connection parameters
 #define SSID "Pixel de Hugo"
 #define psswd "Lumia535"

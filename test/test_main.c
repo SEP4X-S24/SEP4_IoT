@@ -3,6 +3,7 @@
 #include <unity.h>
 #include "fff.h"
 #include "mocks.h"
+#include "main_functionality.h"
 
 DEFINE_FFF_GLOBALS
 

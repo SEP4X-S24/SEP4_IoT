@@ -4,14 +4,15 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include <util/delay.h>
+#include <avr/sleep.h>
 #endif
 
+#include <aes.h>
 #include <stddef.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdint.h>
 #include <string.h>
-#include <util/delay.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include "display.h"
@@ -20,8 +21,5 @@
 #include "weather.h"
 #include "light.h"
 #include <cJSON.h>
-#include <avr/interrupt.h>
 #include <string.h>
-#include <avr/sleep.h>
 #include <stdbool.h>
-#include <aes.h>

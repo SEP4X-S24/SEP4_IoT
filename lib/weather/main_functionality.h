@@ -1,5 +1,5 @@
 #pragma once
-#include <stdint.h>
+#include "includes.h"
 
 WIFI_ERROR_MESSAGE_t wifi_connect();
 void update_data();
