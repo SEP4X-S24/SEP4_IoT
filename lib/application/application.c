@@ -4,8 +4,8 @@
 // Define the connection parameters
 #define SSID "Norlys83766"
 #define psswd "bas81ymer29"
-#define address "192.168.87.126"
-#define port 88
+#define address "20.13.143.114"
+#define port 2228
 
 #define BLOCK_SIZE 16
 
