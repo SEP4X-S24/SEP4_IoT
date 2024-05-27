@@ -49,7 +49,7 @@ void AES_ECB_decrypt_buffer(struct AES_ctx *ctx, uint8_t *buf, size_t length)
 void create_and_send_weather()
 {
     cJSON *json = cJSON_CreateObject();
-
+    
     TempHumidLight collectedValues = updateWeather();
 
     cJSON_AddNumberToObject(json, "temperature", collectedValues.temp);
@@ -88,15 +88,9 @@ WIFI_ERROR_MESSAGE_t wifi_connect()
     return wifi_command_create_TCP_connection(address, port, update_data, received_message);
 }
 
-int app_start()
+void app_start()
 {
-    init_all();
-    sei();
-
-    display_setValues(9, 9, 9, 9);
-
-    while (1)
-    {
+   
         WIFI_ERROR_MESSAGE_t connection = WIFI_ERROR_NOT_RECEIVING;
         while (connection != WIFI_OK)
         {
@@ -120,6 +114,4 @@ int app_start()
         }
         display_int(6666);
         wifi_command_close_TCP_connection();
-    }
-    return 0;
 }

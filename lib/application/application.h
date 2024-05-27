@@ -27,5 +27,5 @@ void AES_ECB_decrypt_buffer(struct AES_ctx *ctx, uint8_t *buf, size_t length);
 void create_and_send_weather();
 void update_data();
 WIFI_ERROR_MESSAGE_t wifi_connect();
-int app_start();
+void app_start();
 
