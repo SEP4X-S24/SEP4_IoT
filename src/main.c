@@ -1,12 +1,6 @@
-#include "includes.h"
-#include "main_functionality.h"
+#include "application.h"
 
 int main()
 {
-    init_all();
-    sei();
-
-    display_setValues(9, 9, 9, 9);
-
-    main_function();
+    return app_start();
 }
