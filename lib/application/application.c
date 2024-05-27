@@ -14,7 +14,7 @@ int timeout_count = 0;
 struct AES_ctx my_AES_ctx;
 bool UnlockingApproved = false;
 char received_message[128];
-uint8_t key[] = "E3C39C72AC8D2AED";
+uint8_t key[] = {0x2b, 0x7e, 0x15, 0x16, 0x28, 0xae, 0xd2, 0xa6, 0xab, 0xf7, 0x15, 0x88, 0x09, 0xcf, 0x4f, 0x3c};
 
 void init_all()
 {
@@ -24,20 +24,17 @@ void init_all()
     AES_init_ctx(&my_AES_ctx, key);
 }
 
-// Function to pad the input to a multiple of the block size using PKCS#7 padding
+// implementation of PKCS#7 padding
 void pad_input(uint8_t *input, size_t *length)
 {
     size_t padding_needed = BLOCK_SIZE - (*length % BLOCK_SIZE);
     size_t padded_length = *length + padding_needed;
 
-    // Fill the padding bytes with the value of padding_needed
     for (size_t i = *length; i < padded_length; i++) {
         input[i] = (uint8_t)padding_needed;
     }
     *length = padded_length;
 }
-
-
 
 
 void AES_ECB_encrypt_buffer(struct AES_ctx *ctx, uint8_t *buf, size_t length)
@@ -53,7 +50,7 @@ void bin2hex(const uint8_t *bin, size_t len, char *hex) {
     for (size_t i = 0; i < len; i++) {
         sprintf(hex + (i * 2), "%02x", bin[i]);
     }
-    hex[len * 2] = '\0'; // Null-terminate the hex string
+    hex[len * 2] = '\0'; // null-terminate 
 }
 
 void create_and_send_weather()
