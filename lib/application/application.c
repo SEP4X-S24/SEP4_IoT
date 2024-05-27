@@ -14,7 +14,7 @@ int timeout_count = 0;
 struct AES_ctx my_AES_ctx;
 bool UnlockingApproved = false;
 char received_message[128];
-uint8_t key[] = "E3C39C72AC8D2AE";
+uint8_t key[] = "E3C39C72AC8D2AED";
 
 void init_all()
 {
@@ -36,6 +36,8 @@ void pad_input(uint8_t *input, size_t *length)
     }
     *length = padded_length;
 }
+
+
 
 
 void AES_ECB_encrypt_buffer(struct AES_ctx *ctx, uint8_t *buf, size_t length)
@@ -74,10 +76,21 @@ void create_and_send_weather()
         
         bin2hex((uint8_t *)jsonString, length, hex);
 
-        wifi_command_TCP_transmit((unsigned char *)hex, length * 2);
+        // Prepend "ENCRYPTED:" to the hex string
+        const char *prefix = "ENCRYPTED:";
+        size_t prefixLength = strlen(prefix);
+        size_t totalLength = prefixLength + strlen(hex);
+        char *finalData = (char *)malloc(totalLength + 1);  // +1 for null-termination
+        strcpy(finalData, prefix);
+        strcat(finalData, hex);
 
+        // Transmit the final data
+        wifi_command_TCP_transmit((unsigned char *)finalData, totalLength);
+
+        // Clean up
         cJSON_Delete(json);
         free(jsonString);
+        free(finalData);
 
         ping_timeout = false;
         timeout_count = 0;
