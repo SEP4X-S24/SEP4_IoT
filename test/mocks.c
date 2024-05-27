@@ -13,3 +13,7 @@ DEFINE_FAKE_VOID_FUNC(display_int, int16_t);
 #ifdef WEATHER
 DEFINE_FAKE_VALUE_FUNC(TempHumid, temperature_humidity_get_combined_values);
 #endif
+#ifdef MAIN
+DEFINE_FAKE_VOID_FUNC(wifi_init);
+DEFINE_FAKE_VOID_FUNC(weather_init);
+#endif
