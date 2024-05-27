@@ -68,8 +68,6 @@ void bin2hex(const uint8_t *bin, size_t len, char *hex) {
 
 void create_and_send_weather()
 {
-    if (strcmp(received_message, "updateWeather") == 0)
-    {
         cJSON *json = cJSON_CreateObject();
 
         TempHumidLight collectedValues = updateWeather();
@@ -95,7 +93,7 @@ void create_and_send_weather()
 
         ping_timeout = false;
         timeout_count = 0;
-    }
+    
 }
 
 WIFI_ERROR_MESSAGE_t wifi_connect()
@@ -126,9 +124,10 @@ int main()
         ping_timeout = false;
         while (!ping_timeout)
         {
-            while (timeout_count < 31) // this is so the updateWeather interrupt resets 31 minute countdown
+            while (timeout_count < 301) // this is so the updateWeather interrupt resets 31 minute countdown
             {
-                _delay_ms(60000);
+                _delay_ms(6000);
+                display_int(timeout_count);
                 timeout_count += 1;
             }
             ping_timeout = true;
