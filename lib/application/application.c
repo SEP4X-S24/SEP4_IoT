@@ -6,13 +6,15 @@
 #define address "192.168.114.113"
 #define port 88
 
+
 #define BLOCK_SIZE 16
 
 bool ping_timeout = false;
 int timeout_count = 0;
 struct AES_ctx my_AES_ctx;
+bool UnlockingApproved = false;
 char received_message[128];
-uint8_t key[] = "5468617473206D79204B756E67204675";
+uint8_t key[] = "E3C39C72AC8D2AE";
 
 void init_all()
 {
@@ -22,13 +24,19 @@ void init_all()
     AES_init_ctx(&my_AES_ctx, key);
 }
 
-// Function to pad the input to a multiple of the block size
+// Function to pad the input to a multiple of the block size using PKCS#7 padding
 void pad_input(uint8_t *input, size_t *length)
 {
-    size_t padded_length = (*length + BLOCK_SIZE - 1) & ~(BLOCK_SIZE - 1);
-    memset(input + *length, 0, padded_length - *length);
+    size_t padding_needed = BLOCK_SIZE - (*length % BLOCK_SIZE);
+    size_t padded_length = *length + padding_needed;
+
+    // Fill the padding bytes with the value of padding_needed
+    for (size_t i = *length; i < padded_length; i++) {
+        input[i] = (uint8_t)padding_needed;
+    }
     *length = padded_length;
 }
+
 
 void AES_ECB_encrypt_buffer(struct AES_ctx *ctx, uint8_t *buf, size_t length)
 {
@@ -38,41 +46,44 @@ void AES_ECB_encrypt_buffer(struct AES_ctx *ctx, uint8_t *buf, size_t length)
     }
 }
 
-void AES_ECB_decrypt_buffer(struct AES_ctx *ctx, uint8_t *buf, size_t length)
-{
-    for (size_t i = 0; i < length; i += BLOCK_SIZE)
-    {
-        AES_ECB_decrypt(ctx, buf + i);
+
+void bin2hex(const uint8_t *bin, size_t len, char *hex) {
+    for (size_t i = 0; i < len; i++) {
+        sprintf(hex + (i * 2), "%02x", bin[i]);
     }
+    hex[len * 2] = '\0'; // Null-terminate the hex string
 }
 
 void create_and_send_weather()
 {
-    cJSON *json = cJSON_CreateObject();
+        cJSON *json = cJSON_CreateObject();
 
-    TempHumidLight collectedValues = updateWeather();
+        TempHumidLight collectedValues = updateWeather();
 
-    cJSON_AddNumberToObject(json, "temperature", collectedValues.temp);
-    cJSON_AddNumberToObject(json, "humidity", collectedValues.humid);
-    cJSON_AddNumberToObject(json, "light", collectedValues.light);
-    char *jsonString = cJSON_Print(json);
-    size_t length = strlen(jsonString);
+        cJSON_AddNumberToObject(json, "temperature", collectedValues.temp);
+        cJSON_AddNumberToObject(json, "humidity", collectedValues.humid);
+        cJSON_AddNumberToObject(json, "light", collectedValues.light);
+        char *jsonString = cJSON_Print(json);
+        size_t length = strlen(jsonString);
+    
+        pad_input((uint8_t *)jsonString, &length);
 
-    pad_input((uint8_t *)jsonString, &length);
+        char hex[length * 2 + 1]; // Adjust the size of hex array to accommodate null-terminated string
 
-    AES_ECB_encrypt_buffer(&my_AES_ctx, (uint8_t *)jsonString, length);
+        AES_ECB_encrypt_buffer(&my_AES_ctx, (uint8_t *)jsonString, length);
+        
+        bin2hex((uint8_t *)jsonString, length, hex);
 
-    wifi_command_TCP_transmit((unsigned char *)jsonString, length);
+        wifi_command_TCP_transmit((unsigned char *)hex, length * 2);
 
-    AES_ECB_decrypt_buffer(&my_AES_ctx, (uint8_t *)jsonString, length);
+        cJSON_Delete(json);
+        free(jsonString);
 
-    cJSON_Delete(json);
-    free(jsonString);
-
-    ping_timeout = false;
-    timeout_count = 0;
-    display_int(5555);
+        ping_timeout = false;
+        timeout_count = 0;
+    
 }
+
 
 void update_data()
 {
