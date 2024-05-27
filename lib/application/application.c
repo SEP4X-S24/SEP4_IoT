@@ -1,11 +1,11 @@
 #include "application.h"
 
 // Define the connection parameters
-#define SSID "Pixel de Hugo"
-#define psswd "Lumia535"
-#define address "192.168.114.113"
+// Define the connection parameters
+#define SSID "Norlys83766"
+#define psswd "bas81ymer29"
+#define address "192.168.87.126"
 #define port 88
-
 
 #define BLOCK_SIZE 16
 
