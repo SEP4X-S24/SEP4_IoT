@@ -1,7 +1,6 @@
+#ifdef MAIN
 #include "application.h"
 
-// Define the connection parameters
-// Define the connection parameters
 #define SSID "Norlys83766"
 #define psswd "bas81ymer29"
 #define address "20.13.143.114"
@@ -55,9 +54,9 @@ void bin2hex(const uint8_t *bin, size_t len, char *hex) {
 
 void create_and_send_weather()
 {
-        cJSON *json = cJSON_CreateObject();
+    cJSON *json = cJSON_CreateObject();
 
-        TempHumidLight collectedValues = updateWeather();
+    TempHumidLight collectedValues = updateWeather();
 
         cJSON_AddNumberToObject(json, "temperature", collectedValues.temp);
         cJSON_AddNumberToObject(json, "humidity", collectedValues.humid);
@@ -109,15 +108,9 @@ WIFI_ERROR_MESSAGE_t wifi_connect()
     return wifi_command_create_TCP_connection(address, port, update_data, received_message);
 }
 
-int app_start()
+void app_start()
 {
-    init_all();
-    sei();
-
-    display_setValues(9, 9, 9, 9);
-
-    while (1)
-    {
+   
         WIFI_ERROR_MESSAGE_t connection = WIFI_ERROR_NOT_RECEIVING;
         while (connection != WIFI_OK)
         {
@@ -141,6 +134,5 @@ int app_start()
         }
         display_int(6666);
         wifi_command_close_TCP_connection();
-    }
-    return 0;
 }
+#endif
