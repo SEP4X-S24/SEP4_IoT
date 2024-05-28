@@ -22,12 +22,8 @@ jobs:
     - name: Install Project Dependencies
       run: platformio lib install
 
-    - name: Build for Specific Environment
-      run: platformio run --environment win_test_weather
-
-    - name: Run Tests for Specific Environment
-      run: platformio test --environment win_test_temp_humid
-
-    - name: Run Tests for Specific Environment
-      run: platformio test --environment win_test_main
-
+    - name: Build and Test for Multiple Environments
+      run: |
+        platformio run --environment win_test_weather
+        platformio test --environment win_test_temp_humid
+        platformio test --environment win_test_main
