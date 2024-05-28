@@ -1,4 +1,4 @@
-#ifdef TEMP_HUMID
+#ifndef WEATHER
 #include "application.h"
 
 // Define the connection parameters
