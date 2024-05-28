@@ -8,6 +8,6 @@ int main()
     display_setValues(9, 9, 9, 9);
     while (1)
     {
-        app_start()
+        app_start();
     }
 }

@@ -1,3 +1,4 @@
+#ifdef TEMP_HUMID
 #include "application.h"
 
 // Define the connection parameters
@@ -136,3 +137,4 @@ void app_start()
         display_int(6666);
         wifi_command_close_TCP_connection();
 }
+#endif

@@ -5,9 +5,9 @@
 #include <avr/interrupt.h>
 #include <util/delay.h>
 #include <avr/sleep.h>
+#include <aes.h>
 #endif
 
-#include <aes.h>
 #include <stddef.h>
 #include <stdlib.h>
 #include <stdio.h>

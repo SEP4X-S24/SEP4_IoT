@@ -9,10 +9,10 @@
 #include "includes.h"
 #include "cJSON.h"
 
-#ifdef __AVR__
-  #include <util/delay.h>
-#else
+#ifdef WINDOWS_TEST
   #include <unistd.h>
+#else
+  #include <util/delay.h>
 #endif
 
 extern bool ping_timeout;
