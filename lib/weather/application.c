@@ -1,4 +1,4 @@
-#ifndef WEATHER
+#ifdef MAIN
 #include "application.h"
 
 // Define the connection parameters
