@@ -1,8 +1,6 @@
 #ifdef MAIN
 #include "application.h"
 
-// Define the connection parameters
-// Define the connection parameters
 #define SSID "Norlys83766"
 #define psswd "bas81ymer29"
 #define address "20.13.143.114"
