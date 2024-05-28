@@ -1,9 +1,14 @@
+#ifdef TEMP_HUMID
 #include "temperature_humidity.h"
 #include "dht11.h"
 #include "stdio.h"
 #include "stdlib.h"
 #include "display.h"
+
+#ifdef WINDOWS_TEST
+#else
 #include <util/delay.h>
+#endif
 
 
 TempHumid temperature_humidity_get_combined_values()
@@ -29,3 +34,4 @@ TempHumid temperature_humidity_get_combined_values()
     TempHumid fail;
     return fail;
 }
+#endif
