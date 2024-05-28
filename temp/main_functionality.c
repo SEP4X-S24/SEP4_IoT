@@ -1,20 +1,17 @@
-#include "application.h"
-
+#include "includes.h"
 // Define the connection parameters
-// Define the connection parameters
-#define SSID "Norlys83766"
-#define psswd "bas81ymer29"
-#define address "20.13.143.114"
-#define port 2228
+#define SSID "Pixel de Hugo"
+#define psswd "Lumia535"
+#define address "192.168.114.113"
+#define port 88
 
 #define BLOCK_SIZE 16
 
 bool ping_timeout = false;
 int timeout_count = 0;
 struct AES_ctx my_AES_ctx;
-bool UnlockingApproved = false;
 char received_message[128];
-uint8_t key[] = {0x2b, 0x7e, 0x15, 0x16, 0x28, 0xae, 0xd2, 0xa6, 0xab, 0xf7, 0x15, 0x88, 0x09, 0xcf, 0x4f, 0x3c};
+uint8_t key[] = "5468617473206D79204B756E67204675";
 
 void init_all()
 {
@@ -24,18 +21,13 @@ void init_all()
     AES_init_ctx(&my_AES_ctx, key);
 }
 
-// implementation of PKCS#7 padding
+// Function to pad the input to a multiple of the block size
 void pad_input(uint8_t *input, size_t *length)
 {
-    size_t padding_needed = BLOCK_SIZE - (*length % BLOCK_SIZE);
-    size_t padded_length = *length + padding_needed;
-
-    for (size_t i = *length; i < padded_length; i++) {
-        input[i] = (uint8_t)padding_needed;
-    }
+    size_t padded_length = (*length + BLOCK_SIZE - 1) & ~(BLOCK_SIZE - 1);
+    memset(input + *length, 0, padded_length - *length);
     *length = padded_length;
 }
-
 
 void AES_ECB_encrypt_buffer(struct AES_ctx *ctx, uint8_t *buf, size_t length)
 {
@@ -45,55 +37,44 @@ void AES_ECB_encrypt_buffer(struct AES_ctx *ctx, uint8_t *buf, size_t length)
     }
 }
 
-
-void bin2hex(const uint8_t *bin, size_t len, char *hex) {
-    for (size_t i = 0; i < len; i++) {
-        sprintf(hex + (i * 2), "%02x", bin[i]);
+void AES_ECB_decrypt_buffer(struct AES_ctx *ctx, uint8_t *buf, size_t length)
+{
+    for (size_t i = 0; i < length; i += BLOCK_SIZE)
+    {
+        AES_ECB_decrypt(ctx, buf + i);
     }
-    hex[len * 2] = '\0'; // null-terminate 
 }
 
 void create_and_send_weather()
 {
-    cJSON *json = cJSON_CreateObject();
+         cJSON *json = cJSON_CreateObject();
 
-    TempHumidLight collectedValues = updateWeather();
+        TempHumidLight collectedValues = updateWeather();
+
 
         cJSON_AddNumberToObject(json, "temperature", collectedValues.temp);
         cJSON_AddNumberToObject(json, "humidity", collectedValues.humid);
         cJSON_AddNumberToObject(json, "light", collectedValues.light);
         char *jsonString = cJSON_Print(json);
         size_t length = strlen(jsonString);
-    
+
+
         pad_input((uint8_t *)jsonString, &length);
 
-        char hex[length * 2 + 1]; // Adjust the size of hex array to accommodate null-terminated string
 
         AES_ECB_encrypt_buffer(&my_AES_ctx, (uint8_t *)jsonString, length);
-        
-        bin2hex((uint8_t *)jsonString, length, hex);
 
-        // Prepend "ENCRYPTED:" to the hex string
-        const char *prefix = "ENCRYPTED:";
-        size_t prefixLength = strlen(prefix);
-        size_t totalLength = prefixLength + strlen(hex);
-        char *finalData = (char *)malloc(totalLength + 1);  // +1 for null-termination
-        strcpy(finalData, prefix);
-        strcat(finalData, hex);
+        wifi_command_TCP_transmit((unsigned char *)jsonString, length);
 
-        // Transmit the final data
-        wifi_command_TCP_transmit((unsigned char *)finalData, totalLength);
+        AES_ECB_decrypt_buffer(&my_AES_ctx, (uint8_t *)jsonString, length);
 
-        // Clean up
         cJSON_Delete(json);
         free(jsonString);
-        free(finalData);
 
         ping_timeout = false;
         timeout_count = 0;
-    
+        display_int(5555);
 }
-
 
 void update_data()
 {
@@ -109,9 +90,9 @@ WIFI_ERROR_MESSAGE_t wifi_connect()
     return wifi_command_create_TCP_connection(address, port, update_data, received_message);
 }
 
-void app_start()
-{
-   
+void main_function(){
+    while (1)
+    {
         WIFI_ERROR_MESSAGE_t connection = WIFI_ERROR_NOT_RECEIVING;
         while (connection != WIFI_OK)
         {
@@ -135,4 +116,5 @@ void app_start()
         }
         display_int(6666);
         wifi_command_close_TCP_connection();
+    }
 }
