@@ -67,8 +67,8 @@ void wifi_connect_test(){
     wifi_command_create_TCP_connection_fake.return_val = WIFI_OK;
     WIFI_ERROR_MESSAGE_t result = wifi_connect();
     TEST_ASSERT_EQUAL(WIFI_OK, result);
-    TEST_ASSERT_EQUAL_STRING("Norlys83766", wifi_command_join_AP_fake.arg0_val);
-    TEST_ASSERT_EQUAL_STRING("bas81ymer29", wifi_command_join_AP_fake.arg1_val);
+    TEST_ASSERT_EQUAL_STRING("Pixel de Hugo", wifi_command_join_AP_fake.arg0_val);
+    TEST_ASSERT_EQUAL_STRING("Lumia535", wifi_command_join_AP_fake.arg1_val);
     TEST_ASSERT_EQUAL_STRING("20.13.143.114", wifi_command_create_TCP_connection_fake.arg0_val);
     TEST_ASSERT_EQUAL_INT(2228, wifi_command_create_TCP_connection_fake.arg1_val);
 }
