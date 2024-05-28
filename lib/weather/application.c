@@ -1,8 +1,8 @@
 #ifdef MAIN
 #include "application.h"
 
-#define SSID "Norlys83766"
-#define psswd "bas81ymer29"
+#define SSID "Pixel de Hugo"
+#define psswd "Lumia535"
 #define address "20.13.143.114"
 #define port 2228
 
